@@ -249,6 +249,11 @@
 
     }
 
+    $(window).on("beforeunload", function() {
+        if (current_document_id === null && $('#summernote').code() !== "") {
+            return "The current content has not been saved into a document.";
+        }
+    });
 
     // Wee need to make sure the database connexion is established before all.
     // But I hate useless tabs and countless callabacks. That's why following code line looks weird.
