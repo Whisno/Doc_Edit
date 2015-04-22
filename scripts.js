@@ -72,58 +72,17 @@
 
     function update_navigator_list() {
         var deferred = $.Deferred();
-        var text = $("#navigator").val();
-        if (text !== '') {
-            database.transaction(function (transaction) {
-                var propositions = [];
-
-                var deferred_1 = $.Deferred();
-                transaction.executeSql("SELECT uri FROM documents WHERE uri LIKE ?", [text+'%'], function(transaction, result) {
-                    for (var i = 0; i < result.rows.length; i++) {
-                        if (propositions.indexOf(result.rows.item(i).uri) === -1) {
-                            propositions.push(result.rows.item(i).uri);
-                        }
-                    }
-                    deferred_1.resolve();
-                }, errorHandler);
-
-                var deferred_2 = $.Deferred();
-                var pattern = '%';
-                for (var i = 0; i < text.length; i++){
-                    pattern += text[i] + '%';
+        database.transaction(function (transaction) {
+            transaction.executeSql("SELECT uri FROM documents", [], function(transaction, result) {
+                var html_str = "";
+                for (var i = 0; i < result.rows.length; i++) {
+                    html_str += "<option value='" + result.rows.item(i).uri + "'/>";
                 }
-                transaction.executeSql("SELECT uri FROM documents WHERE uri LIKE ?", [pattern], function(transaction, result) {
-                    for (i = 0; i < result.rows.length; i++) {
-                        if (propositions.indexOf(result.rows.item(i).uri) === -1) {
-                            propositions.push(result.rows.item(i).uri);
-                        }
-                    }
-                    deferred_2.resolve();
-                }, errorHandler);
-
-                $.when(deferred_1, deferred_2).then(function() {
-                    deferred.resolve(propositions);
-                });
-            });
-        } else {
-            database.transaction(function (transaction) {
-                transaction.executeSql("SELECT uri FROM documents", [], function(transaction, result) {
-                    var propositions = [];
-                    for (var i = 0; i < result.rows.length; i++) {
-                        propositions.push(result.rows.item(i).uri);
-                    }
-                    deferred.resolve(propositions);
-                }, errorHandler);
-            });
-        }
-        return deferred.then(function(propositions) {
-            var doc_list = $("#documents");
-            var html_str = "";
-            for (var i=0; i<propositions.length; i++) {
-                html_str += "<option value='" + propositions[i] + "'/>";
-            }
-            doc_list.html(html_str);
+                $("#documents").html(html_str);
+                deferred.resolve();
+            }, errorHandler);
         });
+        return deferred;
     }
 
     function set_document(doc) {
@@ -159,10 +118,7 @@
 
     function get_document(document_name, category_name, category_id, create) {
         var deferred = $.Deferred();
-        var query_search = "SELECT * FROM documents WHERE name='" + document_name + "'";
-        if (category_id) {
-            query_search += " AND category_id=" + category_id;
-        }
+        var query_search = "SELECT * FROM documents WHERE name='" + document_name + "' AND category_id='" + category_id + "'";
         database.transaction(function (transaction) {
             transaction.executeSql(query_search, [], function(transaction, result) {
                 if (result.rows.length === 1) {
@@ -199,7 +155,9 @@
             });
         }
 
-        return $.when(deferred_category, deferred_document);
+        return $.when(deferred_category, deferred_document).then(function() {
+            update_navigator_list();
+        });
     }
 
     function save_document(document_content) {
@@ -232,6 +190,7 @@
         });
 
         return $.when(deferred_category, deferred_deletion).then(function() {
+            update_navigator_list();
             $('#navigator').val(category_name ? category_name + '/' : '');
             $('#navigator').trigger('input');
         });
@@ -283,6 +242,7 @@
             });
         });
         return $.when(deferred_deletion).done(function() {
+            update_navigator_list();
             $('#navigator').val('');
             $('#navigator').trigger('input');
         });
@@ -296,9 +256,7 @@
     $(document).ready(function() { init_db().then(function() {
 
         update_navigator_list();
-        $("#navigator").bind('input', function() {
-            update_navigator_list();
-        });
+        $('#navigator').focus();
 
         $("#navigator").bind('keyup', function(e) {
             var text = $(this).val();
@@ -330,8 +288,12 @@
             onChange: function(contents) {
                 save_document(contents);
                 update_title();
+            },
+            onkeyup: function(e) {
+                if (e.shiftKey && e.keyCode === 9) {
+                    $('#navigator').focus();
+                }
             }
-
         });
 
         var last_session_doc_id = document.cookie.replace(/(?:(?:^|.*;\s*)doc_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
