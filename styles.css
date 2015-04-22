@@ -1,0 +1,41 @@
+#navigator {
+    width: 100%;
+    margin: 0;
+    border: none;
+}
+
+/*
+html { height: 100%; }
+body { min-height: 100%; padding: 0; }
+#navigator { height: 20px; }
+.note-editor { min-height: calc(100% - 20px); }
+.note-editable { min-height: 100% }
+*/
+
+.note-editable {
+    min-height: 300px;
+}
+
+@media print {
+    #navigator, .note-editor > * {
+        display: none;
+    }
+
+    .note-editor .note-editable {
+        display: block;
+        padding: 0;
+        text-align: justify;
+    }
+
+    .note-editor {
+        border: none;
+    }
+
+    h1 {
+        margin-top: 0;
+    }
+}
+
+@page {
+    margin: 20mm 15mm;
+}
