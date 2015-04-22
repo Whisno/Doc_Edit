@@ -289,6 +289,7 @@
                 ['layout', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
                 ['insert', ['link', 'video', 'hr', 'table']],
+		        ['code', ['codeview']],
             ],
             onChange: function(contents) {
                 save_document(contents);
