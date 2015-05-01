@@ -76,7 +76,8 @@
             transaction.executeSql("SELECT uri FROM documents", [], function(transaction, result) {
                 var html_str = "";
                 for (var i = 0; i < result.rows.length; i++) {
-                    html_str += "<option value='" + result.rows.item(i).uri + "'/>";
+                    var val = result.rows.item(i).uri.replace('"', '&quot;').replace('&', '&amp;');
+                    html_str += '<option value="' + val + '"/>';
                 }
                 $("#documents").html(html_str);
                 deferred.resolve();
