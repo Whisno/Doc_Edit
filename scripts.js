@@ -105,10 +105,15 @@
                 if (result.rows.length === 1) {
                     deferred.resolve({'id': result.rows.item(0).id});
                 } else if (create === true) {
-                    var query_create = "INSERT INTO categories (name) VALUES (?)";
-                    transaction.executeSql(query_create, [category_name], function(transaction, result) {
-                        deferred.resolve({'id': result.insertId});
-                    }, errorHandler);
+                    var confirmation_msg = "Do you want to create category '" + category_name + "' ?";
+                    if (window.confirm(confirmation_msg)) {
+                        var query_create = "INSERT INTO categories (name) VALUES (?)";
+                        transaction.executeSql(query_create, [category_name], function(transaction, result) {
+                            deferred.resolve({'id': result.insertId});
+                        }, errorHandler);
+                    } else {
+                        deferred.reject();
+                    }
                 } else {
                     deferred.reject();
                 }
@@ -140,24 +145,31 @@
     }
 
     function open_or_create(category_name, document_name) {
-        var deferred_category, deferred_document;
+        var deferred_category = $.Deferred();
+        var deferred_document = $.Deferred();
 
         // Find a category or create it
         if (category_name) {
             deferred_category = get_category(category_name, true);
+        } else {
+            deferred_category.resolve();
         }
 
         // Find a document or create it
         if (document_name) {
-            $.when(deferred_category).then(function(category) {
+            deferred_category.then(function(category) {
                 deferred_document = get_document(document_name, category_name, category && category.id, true).then(function(doc) {
                     set_document(doc);
                 });
+            }, function() {
+                deferred_document.reject();
             });
         }
 
         return $.when(deferred_category, deferred_document).then(function() {
             update_navigator_list();
+        }, function() {
+            $('#navigator').val('');
         });
     }
 
