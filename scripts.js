@@ -118,9 +118,9 @@
 
     function get_document(document_name, category_name, category_id, create) {
         var deferred = $.Deferred();
-        var query_search = "SELECT * FROM documents WHERE name='" + document_name + "' AND category_id='" + category_id + "'";
+        var query_search = "SELECT * FROM documents WHERE name=? AND category_id=?";
         database.transaction(function (transaction) {
-            transaction.executeSql(query_search, [], function(transaction, result) {
+            transaction.executeSql(query_search, [document_name, category_id], function(transaction, result) {
                 if (result.rows.length === 1) {
                     deferred.resolve(result.rows.item(0));
                 } else if (create === true) {
