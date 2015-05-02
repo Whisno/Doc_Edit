@@ -7,6 +7,15 @@
     - Preferences (eg. on start, open new document or last document)
 */
 
+var LoadingAnimation = {
+    start: function() {
+        $('#loading_overlay').fadeIn(300);
+    },
+    stop: function() {
+        $('#loading_overlay').fadeOut(300);
+    }
+};
+
 (function () {
     'use strict';
 
@@ -330,7 +339,17 @@
     // Reload the page if a new cache is loaded
     window.addEventListener('load', function() {
         var appcache = window.applicationCache;
+        appcache.addEventListener('downloading', function() {
+            LoadingAnimation.start();
+        }, false);
+        appcache.addEventListener('cached', function() {
+            LoadingAnimation.stop();
+        }, false);
+        appcache.addEventListener('error', function() {
+            LoadingAnimation.stop();
+        }, false);
         appcache.addEventListener('updateready', function() {
+            LoadingAnimation.stop();
             if (appcache.status === appcache.UPDATEREADY)
                 window.location.reload();
         }, false);
