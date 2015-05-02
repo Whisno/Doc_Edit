@@ -16,6 +16,7 @@ font-awesome-4.3.0/fonts/fontawesome-webfont.woff2
 font-awesome-4.3.0/fonts/fontawesome-webfont.eot
 font-awesome-4.3.0/fonts/fontawesome-webfont.ttf
 
+bootstrap-3.3.4-dist/js/bootstrap.min.js
 bootstrap-3.3.4-dist/css/bootstrap.min.css
 bootstrap-3.3.4-dist/css/bootstrap-theme.min.css
 bootstrap-3.3.4-dist/fonts/glyphicons-halflings-regular.woff
@@ -23,8 +24,6 @@ bootstrap-3.3.4-dist/fonts/glyphicons-halflings-regular.svg
 bootstrap-3.3.4-dist/fonts/glyphicons-halflings-regular.eot
 bootstrap-3.3.4-dist/fonts/glyphicons-halflings-regular.woff2
 bootstrap-3.3.4-dist/fonts/glyphicons-halflings-regular.ttf
-bootstrap-3.3.4-dist/js/bootstrap.min.js
-bootstrap-3.3.4-dist/js/npm.js
 
 summernote-0.6.2-dist/summernote.css
 summernote-0.6.2-dist/summernote.min.js
