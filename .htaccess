@@ -1,0 +1,4 @@
+# Application cache must be served with the MIME type text/cache-manifest
+AddType text/cache-manifest .appcache
+# Do not cache the application cache
+ExpiresByType text/cache-manifest "access plus 0 seconds"

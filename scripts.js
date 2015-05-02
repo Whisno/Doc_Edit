@@ -326,4 +326,14 @@
             });
         }
     })});
+
+    // Reload the page if a new cache is loaded
+    window.addEventListener('load', function() {
+        var appcache = window.applicationCache;
+        appcache.addEventListener('updateready', function() {
+            if (appcache.status === appcache.UPDATEREADY)
+                window.location.reload();
+        }, false);
+    }, false);
+
 }());
