@@ -5,6 +5,7 @@
     - Export / import documents
     - Encrypted documents (protected by password)
     - Preferences (eg. on start, open new document or last document)
+    - Flexbox layout ?
 */
 
 var LoadingAnimation = {
@@ -281,6 +282,15 @@ var LoadingAnimation = {
     // But I hate useless tabs and countless callabacks. That's why following code line looks weird.
     // Maybe document readiness could be expressed as a promise, which would look better.
     $(document).ready(function() { init_db().then(function() {
+
+        // Datalist polyfill. Credit to https://github.com/CSS-Tricks/Relevant-Dropdowns
+        yepnope({
+            test: (! Modernizr.input.list),
+            yep: [
+                './datalist-polyfill/jquery.relevant-dropdown.js',
+                './datalist-polyfill/load-fallbacks.js'
+            ]
+        });
 
         update_navigator_list();
         $('#navigator').focus();
