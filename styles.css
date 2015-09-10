@@ -4,6 +4,8 @@
     border: none;
 }
 
+/* Loading effect */
+
 #loading_overlay {
     display: none;
     background: rgba(0,0,0,0.7);
@@ -14,23 +16,36 @@
     left: 0;
     right: 0;
 }
+
 #loading_overlay {
     height: 100%
 }
+
 #loading_overlay .loader {
     top: 25%;
 }
 
-/* Y you no work ?
-html { height: 100%; }
-body { min-height: 100%; padding: 0; }
-#navigator { height: 20px; }
-.note-editor { min-height: calc(100% - 20px); }
-.note-editable { min-height: 100% }
-*/
+/* Make the editor body the scrollable part of the document
+Note : the !important is because summernote adds inline style */
 
-.note-editable {
-    min-height: 300px;
+html, body {
+    height: 100%
+}
+
+#navigator {
+    height: 22px;
+}
+
+.note-editor {
+    height: calc(100% - 22px) !important;
+}
+
+.note-editor .note-toolbar {
+    height: 41px !important;
+}
+
+.note-editor .note-editable {
+    height: calc(100% - 41px) !important;
 }
 
 /* Print styles */
